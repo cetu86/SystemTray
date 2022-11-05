@@ -25,10 +25,11 @@ gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS_FULL   // always sh
 gradle.startParameter.warningMode = WarningMode.All
 
 plugins {
+    id("maven-publish")
     id("com.dorkbox.GradleUtils") version "1.17"
-    id("com.dorkbox.Licensing") version "2.5.5"
+    //id("com.dorkbox.Licensing") version "2.5.5"
     id("com.dorkbox.VersionUpdate") version "2.3"
-    id("com.dorkbox.GradlePublish") version "1.10"
+    //id("com.dorkbox.GradlePublish") version "1.10"
 //    id("com.dorkbox.GradleModuleInfo") version "1.0"
 
     kotlin("jvm") version "1.4.32"
@@ -55,7 +56,6 @@ object Extras {
     const val jnaVersion = "5.8.0"
 }
 
-project.version = 1.0
 
 ///////////////////////////////
 /////  assign 'Extras'
@@ -67,6 +67,7 @@ GradleUtils.defaultResolutionStrategy()
 GradleUtils.compileConfiguration(JavaVersion.VERSION_1_8)
 
 
+/*
 licensing {
     license(License.APACHE_2) {
         description(Extras.description)
@@ -87,6 +88,8 @@ licensing {
         }
     }
 }
+
+ */
 
 
 val javaFxExampleCompile : Configuration by configurations.creating { extendsFrom(configurations.implementation.get()) }
@@ -409,6 +412,29 @@ task("jarAllExamples") {
     description = "Create all-in-one examples for testing, using Java only, JavaFX, and SWT"
 }
 
+publishing {
+    repositories {
+        maven {
+
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/cetu86/SystemTray")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        register<MavenPublication>("gpr") {
+            groupId = "eu.cetu"
+            artifactId = "system-tray"
+            version = "1.0"
+            from(components["java"])
+        }
+    }
+}
+
+/*
 
 publishToSonatype {
     groupId = Extras.group
@@ -434,3 +460,6 @@ publishToSonatype {
     }
 }
 
+
+
+ */
