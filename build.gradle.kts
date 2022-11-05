@@ -55,6 +55,8 @@ object Extras {
     const val jnaVersion = "5.8.0"
 }
 
+project.version = 1.0
+
 ///////////////////////////////
 /////  assign 'Extras'
 ///////////////////////////////
@@ -431,3 +433,4 @@ publishToSonatype {
         email = "email@dorkbox.com"
     }
 }
+
